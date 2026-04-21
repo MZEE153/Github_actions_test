@@ -21,13 +21,3 @@ output "web_app_outbound_ip_addresses" {
   description = "Map of Web App outbound IP addresses"
   value       = { for k, v in azurerm_linux_web_app.this : k => v.outbound_ip_addresses }
 }
-
-output "application_insights_instrumentation_key" {
-  description = "Application Insights instrumentation key"
-  value       = var.application_insights_enabled ? azurerm_application_insights.this[0].instrumentation_key : ""
-}
-
-output "application_insights_id" {
-  description = "Application Insights ID"
-  value       = var.application_insights_enabled ? azurerm_application_insights.this[0].id : ""
-}

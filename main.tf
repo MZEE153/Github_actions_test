@@ -201,10 +201,6 @@ module "web_app" {
     }
   }
 
-  # Application Insights
-  application_insights_enabled = true
-  application_insights_name    = "Azeemwebapp_Dev_AppInsights"
-
   depends_on = [module.app_service_plan, module.app_subnets]
 }
 
@@ -295,22 +291,21 @@ module "private_endpoints" {
         Project     = "Azeemwebapp"
       }
     }
-    storage_file_endpoint = {
-      name                           = "storage-file-pe"
-      resource_group_name            = module.resource_groups.resource_group_names["app"]
-      location                       = "WestCentralUS"
-      subnet_id                      = module.app_subnets.subnet_ids["private_endpoint_subnet"]
-      target_resource_id             = module.storage_account.storage_account_ids["app_storage"]
-      target_resource_type           = "file"
-      private_connection_resource_id = module.storage_account.storage_account_ids["app_storage"]
-      is_manual_connection           = false
-      tags = {
-        Environment = "Dev"
-        Project     = "Azeemwebapp"
-      }
-    }
+    # storage_file_endpoint = {
+    #   name                           = "storage-file-pe"
+    #   resource_group_name            = module.resource_groups.resource_group_names["app"]
+    #   location                       = "WestCentralUS"
+    #   subnet_id                      = module.app_subnets.subnet_ids["private_endpoint_subnet"]
+    #   target_resource_id             = module.storage_account.storage_account_ids["app_storage"]
+    #   target_resource_type           = "file"
+    #   private_connection_resource_id = module.storage_account.storage_account_ids["app_storage"]
+    #   is_manual_connection           = false
+    #   tags = {
+    #     Environment = "Dev"
+    #     Project     = "Azeemwebapp"
+    #   }
+    # }
   }
-
   depends_on = [module.storage_account, module.app_subnets]
 }
 
@@ -363,10 +358,9 @@ output "web_app" {
   description = "Web App information"
   sensitive   = true
   value = {
-    name             = module.web_app.web_app_names["webapp"]
-    id               = module.web_app.web_app_ids["webapp"]
-    hostname         = module.web_app.web_app_default_hostnames["webapp"]
-    app_insights_key = module.web_app.application_insights_instrumentation_key
+    name     = module.web_app.web_app_names["webapp"]
+    id       = module.web_app.web_app_ids["webapp"]
+    hostname = module.web_app.web_app_default_hostnames["webapp"]
   }
 }
 
@@ -392,7 +386,6 @@ output "private_endpoints" {
   description = "Private Endpoint information"
   value = {
     blob = module.private_endpoints.private_endpoint_ids["storage_blob_endpoint"]
-    file = module.private_endpoints.private_endpoint_ids["storage_file_endpoint"]
   }
 }
 

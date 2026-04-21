@@ -37,16 +37,3 @@ variable "web_apps" {
     }
   }
 }
-
-# Variable for Application Insights
-variable "application_insights_enabled" {
-  description = "Enable Application Insights"
-  type        = bool
-  default     = true
-}
-
-variable "application_insights_name" {
-  description = "Application Insights name"
-  type        = string
-  default     = "Azeemwebapp_Dev_AppInsights"
-}

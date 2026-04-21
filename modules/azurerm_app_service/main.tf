@@ -3,20 +3,6 @@
 # "Arre bhai, Web App hai - yeh actual application chalta hai!
 # Java 17 + JBoss EAP 7 - yeh combo hai production-ready!"
 
-# Create Application Insights (if enabled)
-# "Application Insights - performance monitoring ka saathi!"
-resource "azurerm_application_insights" "this" {
-  count = var.application_insights_enabled ? 1 : 0
-
-  name                = var.application_insights_name
-  resource_group_name = var.web_apps["webapp"].resource_group_name
-  location            = var.web_apps["webapp"].location
-  application_type    = "web"
-  retention_in_days   = 30
-
-  tags = var.web_apps["webapp"].tags
-}
-
 # Create Web Apps using for_each
 # "Web App ban raha hai - Java 17, JBoss EAP 7, Linux, Private access!"
 # Note: Using azurerm_linux_web_app (new resource) instead of deprecated azurerm_app_service
@@ -35,10 +21,6 @@ resource "azurerm_linux_web_app" "this" {
     "JAVA_VERSION"                       = each.value.java_version
     "JAVA_OPTS"                          = "-Xmx512m -Xms256m"
     "WEBSITE_ENABLE_APP_SERVICE_STORAGE" = "false"
-
-    # Application Insights instrumentation key
-    "APPINSIGHTS_INSTRUMENTATIONKEY"        = var.application_insights_enabled ? azurerm_application_insights.this[0].instrumentation_key : ""
-    "APPLICATIONINSIGHTS_CONNECTION_STRING" = var.application_insights_enabled ? azurerm_application_insights.this[0].connection_string : ""
   }
 
   # Site config for Linux + Java

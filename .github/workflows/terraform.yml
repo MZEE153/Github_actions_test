@@ -1,7 +1,10 @@
 name: Terraform Deploy
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy Azure Storage"]   # MUST match exact name
+    types:
+      - completed
 
 env:
   ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
@@ -12,6 +15,9 @@ env:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+
+    # 👇 THIS ensures it runs ONLY if previous workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
     - name: Checkout
