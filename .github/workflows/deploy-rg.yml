@@ -1,9 +1,7 @@
 name: Deploy Azure Storage
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   RG_NAME: Default_RG
